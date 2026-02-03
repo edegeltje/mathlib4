@@ -21,7 +21,8 @@ open Function
 variable {α : Type*}
 
 /-- `Monoid.toMulAction` is faithful on nontrivial cancellative monoids with zero. -/
-instance IsRightCancelMulZero.faithfulSMul [MonoidWithZero α] [IsRightCancelMulZero α] :
+@[deprecated "subsumed by `instFaithfulSMul` or " (since := "2026-02-03")]
+lemma IsRightCancelMulZero.faithfulSMul [MonoidWithZero α] [IsRightCancelMulZero α] :
     FaithfulSMul α α where
   eq_of_smul_eq_smul h := by
     cases subsingleton_or_nontrivial α
