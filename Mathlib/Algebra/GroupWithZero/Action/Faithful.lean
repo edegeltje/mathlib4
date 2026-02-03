@@ -7,10 +7,12 @@ module
 
 public import Mathlib.Algebra.Group.Action.Faithful
 public import Mathlib.Algebra.GroupWithZero.NeZero
+public import Mathlib.Tactic.Linter.DeprecatedModule
 
 /-!
 # Faithful actions involving groups with zero
 -/
+deprecated_module (since := "2026-02-03")
 
 @[expose] public section
 
