@@ -55,12 +55,12 @@ export FaithfulVAdd (eq_of_vadd_eq_vadd)
 lemma smul_left_injective' [SMul M α] [FaithfulSMul M α] : Injective ((· • ·) : M → α → α) :=
   fun _ _ h ↦ FaithfulSMul.eq_of_smul_eq_smul (congr_fun h)
 
-/-- `instSMulOfMul` is faithful when there is a (right) unit. -/
-@[to_additive /-- `instVAddOfAdd` is faithful when there is a (right) unit. -/]
+/-- `instSMulOfMul` is faithful when there is a (right) identity. -/
+@[to_additive /-- `instVAddOfAdd` is faithful when there is a (right) identity. -/]
 instance (R : Type*) [MulOneClass R] : FaithfulSMul R R := ⟨fun {r₁ r₂} h ↦ by simpa using h 1⟩
 
-/-- `Mul.toSMulMulOpposite` is faithful when there is a (left) unit. -/
-@[to_additive /-- `Add.toVAddAddOpposite` is faithful when there is a (left) unit. -/]
+/-- `Mul.toSMulMulOpposite` is faithful when there is a (left) identity. -/
+@[to_additive /-- `Add.toVAddAddOpposite` is faithful when there is a (left) identity. -/]
 instance (R : Type*) [MulOneClass R] : FaithfulSMul Rᵐᵒᵖ R := ⟨fun {r₁ r₂} h ↦ by simpa using h 1⟩
 
 /-- `instSMulOfMul` is faithful when multiplication is right cancellative. -/
