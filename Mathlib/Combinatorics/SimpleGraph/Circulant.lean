@@ -76,8 +76,7 @@ theorem cycleGraph_one_adj {u v : Fin 1} : ¬(cycleGraph 1).Adj u v := by
 
 theorem cycleGraph_adj {n : ℕ} {u v : Fin (n + 2)} :
     (cycleGraph (n + 2)).Adj u v ↔ u - v = 1 ∨ v - u = 1 := by
-  simp only [cycleGraph, circulantGraph_adj, Set.mem_singleton_iff,sub_eq_iff_eq_add,
-    add_comm, eq_comm (a := v + 1),eq_comm (a := u + 1), ↓existsAndEq, true_and, or_comm,
+  simp only [cycleGraph, circulantGraph,addCayley_adj, Set.mem_singleton_iff,neg_add_eq_sub,or_comm,
     and_iff_right_iff_imp]
   intro _ _
   simp_all
