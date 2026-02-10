@@ -27,11 +27,13 @@ are adjacent if and only if `-u + v ∈ s` or `-v + u ∈ s`. The elements of `s
 namespace SimpleGraph
 
 /-- Circulant graph over additive group `G` with jumps `s` -/
-@[simps!]
 def circulantGraph {G : Type*} [AddGroup G] (s : Set G) : SimpleGraph G :=
   .addCayley s
 
 variable {G : Type*} [AddGroup G] (s : Set G)
+@[simp]
+lemma circulantGraph_adj (a b : G) : (circulantGraph s).Adj a b ↔
+    (a ≠ b ∧ (-a + b ∈ s ∨  -b + a ∈ s)) := addCayley_adj _ _ _
 
 theorem circulantGraph_eq_erase_zero : circulantGraph s = circulantGraph (s \ {0}) :=
   addCayley_eq_erase_zero s
@@ -76,7 +78,7 @@ theorem cycleGraph_one_adj {u v : Fin 1} : ¬(cycleGraph 1).Adj u v := by
 
 theorem cycleGraph_adj {n : ℕ} {u v : Fin (n + 2)} :
     (cycleGraph (n + 2)).Adj u v ↔ u - v = 1 ∨ v - u = 1 := by
-  simp only [cycleGraph, circulantGraph,addCayley_adj, Set.mem_singleton_iff,neg_add_eq_sub,or_comm,
+  simp only [cycleGraph, circulantGraph_adj, Set.mem_singleton_iff, neg_add_eq_sub, or_comm,
     and_iff_right_iff_imp]
   intro _ _
   simp_all
