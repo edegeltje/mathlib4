@@ -13,7 +13,7 @@ public import Mathlib.Combinatorics.SimpleGraph.Cayley
 # Definition of circulant graphs
 
 This file defines and proves several fact about circulant graphs.
-A circulant graph over type `G` with jumps `s : Set G` is a graph in which two vertices `u` and `v`
+A circulant graph over type `G` with jumps `s : Set G` is a graph in which two vertices `u ≠ v`
 are adjacent if and only if `-u + v ∈ s` or `-v + u ∈ s`. The elements of `s` are called jumps.
 
 ## Main declarations
