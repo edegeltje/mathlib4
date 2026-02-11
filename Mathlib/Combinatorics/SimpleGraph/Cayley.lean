@@ -47,7 +47,12 @@ lemma mulCayley_adj [Group G] (u v : G) :
 @[to_additive]
 theorem mulCayley_eq_erase_one [MulOneClass G] : mulCayley s = mulCayley (s \ {1}) := by
   ext u v
-  simp_rw [mulCayley_adj']; aesop
+  simp only [mulCayley_adj', Set.mem_diff, Set.mem_singleton_iff, and_congr_right_iff, and_assoc]
+  intro h
+  congr! 3
+  rw [iff_and_self]
+  rintro _ rfl
+  simp_all
 
 @[to_additive]
 theorem mulCayley_eq_union_one [MulOneClass G] : mulCayley s = mulCayley (s ∪ {1}) := by
