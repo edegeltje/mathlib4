@@ -9,7 +9,7 @@ public import Mathlib.Algebra.Group.Pointwise.Set.Basic
 public import Mathlib.Combinatorics.SimpleGraph.Basic
 
 /-!
-# Definition of circulant graphs
+# Definition of Cayley graphs
 
 This file defines and proves several fact about Cayley graphs.
 A Cayley graph over type `G` with jumps `s : Set G` is a graph in which two vertices `u ≠ v`
@@ -62,13 +62,16 @@ theorem mulCayley_eq_union_one [MulOneClass G] : mulCayley s = mulCayley (s ∪ 
 @[to_additive]
 theorem mulCayley_eq_symm [Group G] : mulCayley s = mulCayley (s ∪ (s⁻¹)) := by
   ext u v
-  simp only [mulCayley_adj, ne_eq, Set.involutiveInv, Set.mem_union, Set.mem_inv, mul_inv_rev,
-    inv_inv, and_congr_right_iff, iff_self_or]
-  exact fun _ => Or.symm
+  simp [mulCayley_adj, or_comm]
 
 @[to_additive]
 instance [Group G] [DecidableEq G] [DecidablePred (· ∈ s)] : DecidableRel (mulCayley s).Adj :=
   fun u v => decidable_of_iff (u ≠ v ∧ (u⁻¹ * v ∈ s ∨ v⁻¹ * u ∈ s)) (mulCayley_adj s u v).symm
+
+@[to_additive]
+instance [Mul G] [Fintype G] [DecidableEq G] [DecidablePred (· ∈ s)] :
+    DecidableRel (mulCayley s).Adj := fun u v =>
+  decidable_of_iff (u ≠ v ∧ ∃ g ∈ s, u * g = v ∨ u = v * g) (mulCayley_adj' s u v).symm
 
 @[to_additive]
 theorem mulCayley_adj_mul_left_iff [Semigroup G] [IsLeftCancelMul G] {s : Set G} {u v d : G} :
@@ -87,8 +90,16 @@ theorem mulCayley_empty [Mul G] : mulCayley (∅ : Set G) = ⊥ := by
   simp [mulCayley_adj']
 
 @[to_additive (attr := simp)]
+theorem mulCayley_singleton_one [MulOneClass G] : mulCayley ({1} : Set G) = ⊥ := by
+  rw [mulCayley_eq_erase_one, Set.diff_self, mulCayley_empty]
+
+@[to_additive (attr := simp)]
 theorem mulCayley_univ [Group G] : mulCayley (Set.univ : Set G) = ⊤ := by
   ext _ _
   simp [mulCayley_adj]
+
+@[to_additive (attr := simp)]
+theorem mulCayley_compl_singleton_one [Group G] : mulCayley ({1}ᶜ : Set G) = ⊤ := by
+  rw [Set.compl_eq_univ_diff,← mulCayley_eq_erase_one, mulCayley_univ]
 
 end SimpleGraph
