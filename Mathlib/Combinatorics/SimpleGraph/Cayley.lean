@@ -35,7 +35,7 @@ variable {G : Type*} (s : Set G)
 
 @[to_additive]
 lemma mulCayley_adj' [Mul G] (u v : G) :
-    (mulCayley s).Adj u v ↔ u ≠ v ∧ ∃ g ∈ s, (u * g = v ∨ u = v * g) := by
+    (mulCayley s).Adj u v ↔ u ≠ v ∧ ∃ g ∈ s, u * g = v ∨ u = v * g := by
   simp [mulCayley,← exists_or,← and_or_left, eq_comm]
 
 @[to_additive]
