@@ -27,9 +27,9 @@ are adjacent if and only if `u - v ∈ s` or `v - u ∈ s`. The elements of `s` 
 namespace SimpleGraph
 
 /-- Circulant graph over additive group `G` with jumps `s` -/
-@[simps]
+@[simps!]
 def circulantGraph {G : Type*} [AddGroup G] (s : Set G) : SimpleGraph G :=
-  .fromRel (· - · ∈ s)
+  fromRel (· - · ∈ s)
 
 variable {G : Type*} [AddGroup G] (s : Set G)
 
