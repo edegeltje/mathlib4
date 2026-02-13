@@ -7,14 +7,14 @@ module
 
 public import Mathlib.Algebra.Group.Fin.Basic
 public import Mathlib.Combinatorics.SimpleGraph.Hasse
-public import Mathlib.Combinatorics.SimpleGraph.Cayley
+public import Mathlib.Algebra.Group.Pointwise.Set.Basic
 
 /-!
 # Definition of circulant graphs
 
 This file defines and proves several fact about circulant graphs.
-A circulant graph over type `G` with jumps `s : Set G` is a graph in which two vertices `u ≠ v`
-are adjacent if and only if `-u + v ∈ s` or `-v + u ∈ s`. The elements of `s` are called jumps.
+A circulant graph over type `G` with jumps `s : Set G` is a graph in which two vertices `u` and `v`
+are adjacent if and only if `u - v ∈ s` or `v - u ∈ s`. The elements of `s` are called jumps.
 
 ## Main declarations
 
@@ -27,26 +27,36 @@ are adjacent if and only if `-u + v ∈ s` or `-v + u ∈ s`. The elements of `s
 namespace SimpleGraph
 
 /-- Circulant graph over additive group `G` with jumps `s` -/
+@[simps]
 def circulantGraph {G : Type*} [AddGroup G] (s : Set G) : SimpleGraph G :=
-  .addCayley s
+  .fromRel (· - · ∈ s)
 
 variable {G : Type*} [AddGroup G] (s : Set G)
-@[simp]
-lemma circulantGraph_adj (a b : G) : (circulantGraph s).Adj a b ↔
-    (a ≠ b ∧ (-a + b ∈ s ∨ -b + a ∈ s)) := addCayley_adj _ _ _
 
-theorem circulantGraph_eq_erase_zero : circulantGraph s = circulantGraph (s \ {0}) :=
-  addCayley_eq_erase_zero s
+theorem circulantGraph_eq_erase_zero : circulantGraph s = circulantGraph (s \ {0}) := by
+  ext (u v : G)
+  simp only [circulantGraph, fromRel_adj, and_congr_right_iff]
+  intro (h : u ≠ v)
+  apply Iff.intro
+  · intro h1
+    cases h1 with
+      | inl h1 => exact Or.inl ⟨h1, sub_ne_zero_of_ne h⟩
+      | inr h1 => exact Or.inr ⟨h1, sub_ne_zero_of_ne h.symm⟩
+  · intro h1
+    cases h1 with
+      | inl h1 => exact Or.inl h1.left
+      | inr h1 => exact Or.inr h1.left
 
-theorem circulantGraph_eq_symm : circulantGraph s = circulantGraph (s ∪ (-s)) :=
-  addCayley_eq_symm s
+theorem circulantGraph_eq_symm : circulantGraph s = circulantGraph (s ∪ (-s)) := by
+  ext
+  simp only [circulantGraph_adj, Set.mem_union, Set.mem_neg, neg_sub]
+  grind
 
 instance [DecidableEq G] [DecidablePred (· ∈ s)] : DecidableRel (circulantGraph s).Adj :=
-  inferInstanceAs (DecidableRel (addCayley s).Adj)
+  fun _ _ => inferInstanceAs (Decidable (_ ∧ _))
 
 theorem circulantGraph_adj_translate {s : Set G} {u v d : G} :
-    (circulantGraph s).Adj (d + u) (d + v) ↔ (circulantGraph s).Adj u v :=
-  addCayley_adj_add_left_iff.symm
+    (circulantGraph s).Adj (u + d) (v + d) ↔ (circulantGraph s).Adj u v := by simp
 
 /-- Cycle graph over `Fin n` -/
 def cycleGraph : (n : ℕ) → SimpleGraph (Fin n)
@@ -78,8 +88,7 @@ theorem cycleGraph_one_adj {u v : Fin 1} : ¬(cycleGraph 1).Adj u v := by
 
 theorem cycleGraph_adj {n : ℕ} {u v : Fin (n + 2)} :
     (cycleGraph (n + 2)).Adj u v ↔ u - v = 1 ∨ v - u = 1 := by
-  simp only [cycleGraph, circulantGraph_adj, Set.mem_singleton_iff, neg_add_eq_sub, or_comm,
-    and_iff_right_iff_imp]
+  simp only [cycleGraph, circulantGraph_adj, Set.mem_singleton_iff, and_iff_right_iff_imp]
   intro _ _
   simp_all
 
