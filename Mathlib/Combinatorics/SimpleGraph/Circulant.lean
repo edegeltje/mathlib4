@@ -33,7 +33,7 @@ def circulantGraph {G : Type*} [AddGroup G] (s : Set G) : SimpleGraph G :=
 variable {G : Type*} [AddGroup G] (s : Set G)
 @[simp]
 lemma circulantGraph_adj (a b : G) : (circulantGraph s).Adj a b ↔
-    (a ≠ b ∧ (-a + b ∈ s ∨  -b + a ∈ s)) := addCayley_adj _ _ _
+    (a ≠ b ∧ (-a + b ∈ s ∨ -b + a ∈ s)) := addCayley_adj _ _ _
 
 theorem circulantGraph_eq_erase_zero : circulantGraph s = circulantGraph (s \ {0}) :=
   addCayley_eq_erase_zero s
